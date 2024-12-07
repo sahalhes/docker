@@ -15,9 +15,12 @@ try {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
   mongoose.connection.on("connected", function () {
     console.log("connection established successfully");
   });
+
+  console.log("mongoose connected");
 } catch (err) {
   console.log("on connecting mongoose error", err);
 }

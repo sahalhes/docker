@@ -14,42 +14,35 @@ function App() {
   const [allUsers, setAllUsers] = useState([]);
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-  console.log("backendUrl:", backendUrl);
+  console.log("backendUrl ", process.env.REACT_APP_BACKEND_URL);
 
   const loadAllUsers = useCallback(async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/all`);
       setAllUsers(data);
-    } catch (err) {
-      console.error("Error loading users:", err);
-    }
-  }, [backendUrl]);
+    } catch (err) {}
+  }, []);
 
   useEffect(() => {
     loadAllUsers();
   }, [loadAllUsers]);
 
   const submitForm = async () => {
-    if (!name.trim()) return;
+    if (!name) return;
 
     try {
-      const { data } = await axios.post(`${backendUrl}/new-user`, { name: name.trim() });
-      console.log("New user added:", data);
+      const { data } = await axios.post(`${backendUrl}/new-user`, { name });
+      console.log("data is = ", data);
       setAllUsers([...allUsers, data]);
-      setName(""); // Clear input field after submission
-    } catch (err) {
-      console.error("Error adding user:", err);
-    }
+    } catch (err) {}
   };
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`${backendUrl}/user/${id}`);
+      const { data } = await axios.delete(`${backendUrl}/user/${id}`);
       const remainingUsers = allUsers.filter((user) => user._id !== id);
       setAllUsers(remainingUsers);
-    } catch (err) {
-      console.error("Error deleting user:", err);
-    }
+    } catch (err) {}
   };
 
   const onChange = (e) => setName(e.target.value);
@@ -61,13 +54,13 @@ function App() {
       {allUsers.map((user, index) => (
         <div key={user._id} style={{ margin: "5px 0" }}>
           <h3>
-            {index + 1}- {user.name}
+            {" "}
+            {index + 1}- &nbsp;{user.name}
             <span
               style={deleteBtnStyle}
-              role="button"
-              tabIndex={0}
-              onClick={() => deleteUser(user._id)}
-              onKeyPress={(e) => e.key === "Enter" && deleteUser(user._id)}
+              onClick={() => {
+                deleteUser(user._id);
+              }}
             >
               Delete
             </span>
@@ -79,9 +72,9 @@ function App() {
         value={name}
         name="name"
         onChange={onChange}
-        placeholder="Enter your name here"
+        placeholder="enter your name here"
       />
-      <button onClick={submitForm}>Submit</button>
+      <button onClick={submitForm}>Submit form</button>
     </div>
   );
 }
